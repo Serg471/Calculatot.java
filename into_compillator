@@ -1,17 +1,16 @@
-/Ты можешь добавлять свои импорты
-import java.util.*;
-
-//решение должно содержать данный класс
 class Main {
     
     public String calc(String inputString){
-        //  System.out.println("введите выражение для вычисления арабскими или римскими числами,"+
-        //  " используя латинский алфавит, выделяя оператор пробелами");
-        //Scanner scanner = new Scanner(System.in);
-        //String phrase = scanner.nextLine();
         phrase = inputString.toUpperCase();
+        if (phrase.length() < 5) {
+            throw new Exception();
+        }
         String[] words = phrase.split(" ");
-
+        String words_len[] = phrase.split(" ");
+        if (words_len.length > 3){
+            throw new Exception();
+        }
+        
         if (is_roman_is_false(words[0]) == true & is_roman_is_false(words[2]) == true){ //проверяю, что обе части
             int first_arabian_numb = arabian_to_int(words[0]);     //выражния записаны арабскими числами
             int second_arabian_numb = arabian_to_int(words[2]);     // и перевожу из строки в число
@@ -28,26 +27,20 @@ class Main {
             int second_roman_numb = roman_into_arabian(words[2]);  // перевожу в арабские и смотрю, что они входят в диапозон 1-10
             if ( first_roman_numb == -1 || second_roman_numb == -1){
                 throw new Exception();
-
             }
             int res_rom = return_result(first_roman_numb, second_roman_numb, words[1]); // считает результат на арабских числах
             if (res_rom < 1) {   // удовлетворение условию, что при работе с римскими не получился 0 и менее
                 throw new Exception();
-
-
-
             }
             StringBuilder res_roman = arabian_to_roman(res_rom); //перевод на римские цифры и выдача результата
             return res_roman.toString();
         }
         else {
             throw new Exception();
-
-
         }
 
     }
-    private static int return_result (int first, int second, String operator_str){
+    public int return_result (int first, int second, String operator_str){
         char operator = operator_str.charAt(0);   // метод производит вычисление
         int result = 0;
         switch (operator) {
@@ -66,11 +59,11 @@ class Main {
 
     }
 
-    private static int arabian_to_int (String str_numb) {
+    public int arabian_to_int (String str_numb) {
         int numb = Integer.parseInt(str_numb);  // метод переводит символьную строку в число int
         return numb;
     }
-    private static boolean is_roman_is_false(String word) {  // метод выдает правду, если арабские цифры и ложь, если римские
+    public boolean is_roman_is_false(String word) {  // метод выдает правду, если арабские цифры и ложь, если римские
         try {                                           // т.о. исключаем вариант, когда записаны и арабские и римские, оставляем только правда-правда или ложь-ложь
             int first_numb = Integer.parseInt(word);
             return true;
@@ -79,7 +72,7 @@ class Main {
             return false;
         }
     }
-    private static int roman_into_arabian(String roman_numb){  //метод переводиит римские в арабские числа
+    public int roman_into_arabian(String roman_numb){  //метод переводиит римские в арабские числа
         switch (roman_numb) {
             case "I":
                 return 1;
@@ -106,7 +99,7 @@ class Main {
 
         }
     }
-    private static StringBuilder arabian_to_roman(int numb){
+    public StringBuilder arabian_to_roman(int numb){
         StringBuilder roman = new StringBuilder();   // перевод арабского числа в римское
         while (numb > 0){
             if (numb / 50 > 0) {
@@ -121,9 +114,13 @@ class Main {
                 }
                 numb = numb - (tens * 10);
             }
-            else if (numb / 5 > 0){
+            else if (numb / 5 > 0 & numb != 9){
                 numb = numb - 5;
                 roman = roman.append("V");
+            }
+            else if (numb == 9){
+                numb = numb - 9;
+                roman = roman.append("IX");
             }
             else if (numb == 4) {
                 roman = roman.append("IV");
